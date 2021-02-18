@@ -97,6 +97,7 @@ public class PlaceObjects {
         equals.setBounds(buttonWidth * 3, buttonheight * 5, buttonWidth, buttonheight * 2);
         equals.setFont(font);
         equals.setForeground(Color.WHITE);
+        equals.addActionListener(new ActionHandler(equals));
         frame.add(equals);
     }
     //</editor-fold>
@@ -126,6 +127,7 @@ public class PlaceObjects {
         button.setBounds(x, y, width, height);
         button.setFont(font);
         button.setForeground(Color.WHITE);
+        button.addActionListener(new ActionHandler(button));
         frame.add(button);
     }
 
