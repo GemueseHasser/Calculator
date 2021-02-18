@@ -19,9 +19,10 @@ public class GUI {
 
 
     //<editor-fold desc="CONSTRUCTORS">
+
     /**
-     * Es wird eine neue und vollständige Instanz des {@link GUI Graphical-User-Interface} erstellt.
-     * Dieses {@link GUI} ist die grafische Oberfläche des {@link Calculator Taschenrechners}.
+     * Es wird eine neue und vollständig unabhängige Instanz des {@link GUI Graphical-User-Interface} erstellt. Dieses
+     * {@link GUI} ist die grafische Oberfläche des {@link Calculator Taschenrechners}.
      */
     public GUI() {
         final JFrame frame = new JFrame("Taschenrechner");

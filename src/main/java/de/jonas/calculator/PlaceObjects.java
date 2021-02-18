@@ -31,6 +31,7 @@ public class PlaceObjects {
 
 
     //<editor-fold desc="CONSTRUCTORS">
+
     /**
      * Es wird eine neue und vollständig unabhängige Instanz des {@link PlaceObjects} erzeugt. In einem bestimmten
      * {@link JFrame Fenster} werden mithilfe dieser Instanz alle nötigen Objekte platziert, die für einen
