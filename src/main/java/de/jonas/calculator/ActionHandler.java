@@ -54,16 +54,22 @@ public class ActionHandler implements ActionListener {
      * @param text Der Text, auf dem die Aktion basiert.
      */
     @SneakyThrows
+    @SuppressWarnings("checkstyle:IllegalCatch")
     public static void performAction(@NotNull final String text) {
         if (text.equalsIgnoreCase("=")) {
             ScriptEngineManager manager = new ScriptEngineManager();
             ScriptEngine engine = manager.getEngineByName("js");
-            Object result = engine.eval(
-                eval
-                    .replace("÷", "/")
-                    .replace("×", "*")
-                    .replace(",", ".")
-            );
+            Object result = null;
+            try {
+                result = engine.eval(
+                    eval
+                        .replace("÷", "/")
+                        .replace("×", "*")
+                        .replace(",", ".")
+                );
+            } catch (final Exception e) {
+                System.out.println("Bitte gib einen mathematisch richtigen Ausdruck an!");
+            }
             PlaceObjects.getCalcField().setText(" " + String.valueOf(result).replace(".", ","));
             eval = " " + String.valueOf(result).replace(".", ",");
             return;
@@ -91,12 +97,12 @@ public class ActionHandler implements ActionListener {
 
             while (!(
                 subText.endsWith("+")
-                || subText.endsWith("-")
-                || subText.endsWith("×")
-                || subText.endsWith("÷")
-                || subText.endsWith(" ")
-                || subText.endsWith("²")
-                || subText.endsWith("³")
+                    || subText.endsWith("-")
+                    || subText.endsWith("×")
+                    || subText.endsWith("÷")
+                    || subText.endsWith(" ")
+                    || subText.endsWith("²")
+                    || subText.endsWith("³")
             )) {
                 number.append(subText.charAt(subText.length() - 1));
                 subText = subText.substring(0, subText.length() - 1);

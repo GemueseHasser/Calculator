@@ -19,7 +19,7 @@ public class PlaceObjects {
 
     //<editor-fold desc="CONSTANTS">
     /** Die Schriftgröße der {@link Font Schriftart} aller Objekte. */
-    private static final int FONT_SIZE = 45;
+    private static final int FONT_SIZE = 50;
     //</editor-fold>
 
 
