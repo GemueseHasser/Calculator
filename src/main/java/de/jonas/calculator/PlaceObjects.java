@@ -1,5 +1,6 @@
 package de.jonas.calculator;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
@@ -18,7 +19,14 @@ public class PlaceObjects {
 
     //<editor-fold desc="CONSTANTS">
     /** Die Schriftgröße der {@link Font Schriftart} aller Objekte. */
-    private static final int FONT_SIZE = 40;
+    private static final int FONT_SIZE = 45;
+    //</editor-fold>
+
+
+    //<editor-fold desc="STATIC-FIELDS">
+    /** Das {@link JTextField Text-Feld}, welches die gesamte Rechnung aufführt. */
+    @Getter
+    private static JTextField calcField;
     //</editor-fold>
 
 
@@ -50,11 +58,12 @@ public class PlaceObjects {
         final int buttonheight = height / 7 - 5;
 
         // text field
-        JTextField field = new JTextField();
+        JTextField field = new JTextField(" ");
         field.setBounds(0, 0, width - 12, buttonheight);
         field.setFont(font);
         field.setEnabled(false);
         frame.add(field);
+        calcField = field;
 
         // line 1
         placeButton(buttonWidth, buttonheight, 0, buttonheight, "X²");
