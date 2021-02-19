@@ -103,60 +103,59 @@ public class ActionHandler implements ActionListener {
     @SneakyThrows
     @SuppressWarnings("checkstyle:IllegalCatch")
     public void performAction(@NotNull final String text) {
-        if (text.equalsIgnoreCase("=")) {
-            ScriptEngineManager manager = new ScriptEngineManager();
-            ScriptEngine engine = manager.getEngineByName("js");
-            Object result = null;
-            try {
-                result = engine.eval(
-                    eval
-                        .replace("÷", "/")
-                        .replace("×", "*")
-                        .replace(",", ".")
+        switch (text) {
+            case "=":
+                ScriptEngineManager manager = new ScriptEngineManager();
+                ScriptEngine engine = manager.getEngineByName("js");
+                Object result = null;
+                try {
+                    result = engine.eval(
+                        eval
+                            .replace("÷", "/")
+                            .replace("×", "*")
+                            .replace(",", ".")
+                    );
+                } catch (final Exception e) {
+                    System.out.println("Bitte gib einen mathematisch richtigen Ausdruck an!");
+                }
+                final String finalEval = " " + String.valueOf(result).replace(".", ",");
+                PlaceObjects.getCalcField().setText(finalEval);
+                eval = finalEval;
+                break;
+
+            case "C":
+                PlaceObjects.getCalcField().setText(" ");
+                eval = " ";
+                break;
+
+            case "⌫":
+                PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText().substring(
+                    0,
+                    PlaceObjects.getCalcField().getText().length() - 1
+                    )
                 );
-            } catch (final Exception e) {
-                System.out.println("Bitte gib einen mathematisch richtigen Ausdruck an!");
-            }
-            final String finalEval = " " + String.valueOf(result).replace(".", ",");
-            PlaceObjects.getCalcField().setText(finalEval);
-            eval = finalEval;
-            return;
-        }
+                eval = eval.substring(0, eval.length() - 1);
+                break;
 
-        if (text.equalsIgnoreCase("C")) {
-            PlaceObjects.getCalcField().setText(" ");
-            eval = " ";
-            return;
-        }
+            case "X²":
+                PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + "²");
+                eval += "*" + getLastNumber(eval);
+                break;
 
-        if (text.equalsIgnoreCase("⌫")) {
-            PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText().substring(
-                0,
-                PlaceObjects.getCalcField().getText().length() - 1
-                )
-            );
-            eval = eval.substring(0, eval.length() - 1);
-            return;
-        }
+            case "X³":
+                PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + "³");
+                eval += "*" + getLastNumber(eval) + "*" + getLastNumber(eval);
+                break;
 
-        if (text.equalsIgnoreCase("X²")) {
-            PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + "²");
-            eval += "*" + getLastNumber(eval);
-            return;
-        }
+            case "Xʸ":
+                askPotenz();
+                break;
 
-        if (text.equalsIgnoreCase("X³")) {
-            PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + "³");
-            eval += "*" + getLastNumber(eval) + "*" + getLastNumber(eval);
-            return;
+            default:
+                PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + text);
+                eval += text;
+                break;
         }
-
-        if (text.equalsIgnoreCase("Xʸ")) {
-            askPotenz();
-            return;
-        }
-        PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + text);
-        eval += text;
     }
 
     private String getLastNumber(@NotNull final String text) {
