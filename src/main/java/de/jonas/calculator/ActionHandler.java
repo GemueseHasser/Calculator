@@ -129,6 +129,9 @@ public class ActionHandler implements ActionListener {
                 break;
 
             case "⌫":
+                if (PlaceObjects.getCalcField().getText().length() <= 1) {
+                    break;
+                }
                 PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText().substring(
                     0,
                     PlaceObjects.getCalcField().getText().length() - 1
