@@ -70,8 +70,9 @@ public class ActionHandler implements ActionListener {
             } catch (final Exception e) {
                 System.out.println("Bitte gib einen mathematisch richtigen Ausdruck an!");
             }
-            PlaceObjects.getCalcField().setText(" " + String.valueOf(result).replace(".", ","));
-            eval = " " + String.valueOf(result).replace(".", ",");
+            final String finalEval = " " + String.valueOf(result).replace(".", ",");
+            PlaceObjects.getCalcField().setText(finalEval);
+            eval = finalEval;
             return;
         }
 
@@ -92,61 +93,43 @@ public class ActionHandler implements ActionListener {
         }
 
         if (text.equalsIgnoreCase("X²")) {
-            String subText = PlaceObjects.getCalcField().getText();
-            StringBuilder number = new StringBuilder();
-
-            while (!(
-                subText.endsWith("+")
-                    || subText.endsWith("-")
-                    || subText.endsWith("×")
-                    || subText.endsWith("÷")
-                    || subText.endsWith(" ")
-                    || subText.endsWith("²")
-                    || subText.endsWith("³")
-            )) {
-                number.append(subText.charAt(subText.length() - 1));
-                subText = subText.substring(0, subText.length() - 1);
-            }
-
-            StringBuilder result = new StringBuilder();
-
-            for (int i = number.toString().length() - 1; i >= 0; i--) {
-                result.append(number.charAt(i));
-            }
-
             PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + "²");
-            eval += "*" + result.toString();
+            eval += "*" + getLastNumber();
             return;
         }
 
         if (text.equalsIgnoreCase("X³")) {
-            String subText = PlaceObjects.getCalcField().getText();
-            StringBuilder number = new StringBuilder();
-
-            while (!(
-                subText.endsWith("+")
-                    || subText.endsWith("-")
-                    || subText.endsWith("×")
-                    || subText.endsWith("÷")
-                    || subText.endsWith(" ")
-                    || subText.endsWith("²")
-                    || subText.endsWith("³")
-            )) {
-                number.append(subText.charAt(subText.length() - 1));
-                subText = subText.substring(0, subText.length() - 1);
-            }
-
-            StringBuilder result = new StringBuilder();
-
-            for (int i = number.toString().length() - 1; i >= 0; i--) {
-                result.append(number.charAt(i));
-            }
-
             PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + "³");
-            eval += "*" + result.toString() + "*" + result.toString();
+            eval += "*" + getLastNumber() + "*" + getLastNumber();
             return;
         }
         PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + text);
         eval += text;
+    }
+
+    private static String getLastNumber() {
+        String subText = PlaceObjects.getCalcField().getText();
+        StringBuilder number = new StringBuilder();
+
+        while (!(
+            subText.endsWith("+")
+                || subText.endsWith("-")
+                || subText.endsWith("×")
+                || subText.endsWith("÷")
+                || subText.endsWith(" ")
+                || subText.endsWith("²")
+                || subText.endsWith("³")
+        )) {
+            number.append(subText.charAt(subText.length() - 1));
+            subText = subText.substring(0, subText.length() - 1);
+        }
+
+        StringBuilder result = new StringBuilder();
+
+        for (int i = number.toString().length() - 1; i >= 0; i--) {
+            result.append(number.charAt(i));
+        }
+
+        return result.toString();
     }
 }
