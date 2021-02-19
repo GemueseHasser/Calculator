@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -62,6 +63,7 @@ public class PlaceObjects {
         field.setBounds(0, 0, width - 12, buttonheight);
         field.setFont(font);
         field.setEnabled(false);
+        field.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
         frame.add(field);
         calcField = field;
 

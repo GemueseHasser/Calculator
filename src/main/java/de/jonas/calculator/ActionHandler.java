@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -193,6 +194,7 @@ public class ActionHandler implements ActionListener {
         frame.setLayout(null);
 
         final JTextField field = new JTextField();
+        field.grabFocus();
         field.setBounds(
             POTENZ_FRAME_FIELD_X,
             POTENZ_FRAME_FIELD_Y,
@@ -207,6 +209,9 @@ public class ActionHandler implements ActionListener {
             POTENZ_FRAME_BUTTON_WIDTH,
             POTENZ_FRAME_BUTTON_HEIGHT
         );
+        finish.setOpaque(true);
+        finish.setBackground(Color.LIGHT_GRAY);
+        finish.setFocusable(false);
         finish.addActionListener(actionEvent -> {
             final String number = getLastNumber(eval);
             final int potenz = Integer.parseInt(field.getText());
