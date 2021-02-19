@@ -129,7 +129,7 @@ public class PlaceObjects {
         @Range(from = 0, to = Integer.MAX_VALUE) final int y,
         @NotNull final String text
     ) {
-        JButton button = new JButton(text);
+        final JButton button = new JButton(text);
         button.setOpaque(true);
         button.setBackground(Color.DARK_GRAY);
         button.setFocusable(false);

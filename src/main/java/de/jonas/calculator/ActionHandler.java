@@ -1,11 +1,14 @@
 package de.jonas.calculator;
 
+import de.jonas.Calculator;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JTextField;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +17,40 @@ import java.awt.event.ActionListener;
  * Der {@link ActionListener}, der wartet, bis ein Button gedrückt wird, und dann die jeweilige Aktion ausführt.
  */
 public class ActionHandler implements ActionListener {
+
+    //<editor-fold desc="CONSTANTS">
+
+    //<editor-fold desc="potenz-frame">
+    /** Die Breite des {@link JFrame Fensters}, welches nach einer entsprechenden Potenz fragt. */
+    private static final int POTENZ_FRAME_WIDTH = 300;
+    /** Die Höhe des {@link JFrame Fensters}, welches nach einer entsprechenden Potenz fragt. */
+    private static final int POTENZ_FRAME_HEIGHT = 150;
+    //</editor-fold>
+
+    //<editor-fold desc="potenz-frame-field">
+    /** Die X-Koordinate des {@link JTextField Text-Feldes}, welche nach einer entsprechenden Potenz fragt. */
+    private static final int POTENZ_FRAME_FIELD_X = 10;
+    /** Die Y-Koordinate des {@link JTextField Text-Feldes}, welche nach einer entsprechenden Potenz fragt. */
+    private static final int POTENZ_FRAME_FIELD_Y = 10;
+    /** Die Breite des {@link JTextField Text-Feldes}, welche nach einer entsprechenden Potenz fragt. */
+    private static final int POTENZ_FRAME_FIELD_WIDTH = 270;
+    /** Die Höhe des {@link JTextField Text-Feldes}, welche nach einer entsprechenden Potenz fragt. */
+    private static final int POTENZ_FRAME_FIELD_HEIGHT = 35;
+    //</editor-fold>
+
+    //<editor-fold desc="potenz-frame-button">
+    /** Die X-Koordinate des {@link JButton Buttons}, welcher die Abfrage nach einer entsprechenden Potenz beendet. */
+    private static final int POTENZ_FRAME_BUTTON_X = 10;
+    /** Die Y-Koordinate des {@link JButton Buttons}, welcher die Abfrage nach einer entsprechenden Potenz beendet. */
+    private static final int POTENZ_FRAME_BUTTON_Y = 55;
+    /** Die Breite des {@link JButton Buttons}, welcher die Abfrage nach einer entsprechenden Potenz beendet. */
+    private static final int POTENZ_FRAME_BUTTON_WIDTH = 270;
+    /** Die Höhe des {@link JButton Buttons}, welcher die Abfrage nach einer entsprechenden Potenz beendet. */
+    private static final int POTENZ_FRAME_BUTTON_HEIGHT = 35;
+    //</editor-fold>
+
+    //</editor-fold>
+
 
     //<editor-fold desc="STATIC-FIELDS">
     /** Der String, der im Hintergrund läuft und für den Nutzer unsichtbar ist, womit aber alles berechnet wird. */
@@ -114,11 +151,7 @@ public class ActionHandler implements ActionListener {
         }
 
         if (text.equalsIgnoreCase("Xʸ")) {
-            final String number = getLastNumber(eval);
-            final int potenz = 4;
-            for (int i = 1; i < potenz; i++) {
-                eval += "*" + number;
-            }
+            askPotenz();
             return;
         }
         PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + text);
@@ -149,5 +182,48 @@ public class ActionHandler implements ActionListener {
         }
 
         return result.toString();
+    }
+
+    private void askPotenz() {
+        final JFrame frame = new JFrame("Wählen sie eine Potenz");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setBounds(0, 0, POTENZ_FRAME_WIDTH, POTENZ_FRAME_HEIGHT);
+        frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
+        frame.setLayout(null);
+
+        final JTextField field = new JTextField();
+        field.setBounds(
+            POTENZ_FRAME_FIELD_X,
+            POTENZ_FRAME_FIELD_Y,
+            POTENZ_FRAME_FIELD_WIDTH,
+            POTENZ_FRAME_FIELD_HEIGHT
+        );
+
+        final JButton finish = new JButton("Fertig");
+        finish.setBounds(
+            POTENZ_FRAME_BUTTON_X,
+            POTENZ_FRAME_BUTTON_Y,
+            POTENZ_FRAME_BUTTON_WIDTH,
+            POTENZ_FRAME_BUTTON_HEIGHT
+        );
+        finish.addActionListener(actionEvent -> {
+            final String number = getLastNumber(eval);
+            final int potenz = Integer.parseInt(field.getText());
+            for (int i = 1; i < potenz; i++) {
+                eval += "*" + number;
+            }
+            String stringPotenz = "";
+            for (int i1 = 0; i1 < String.valueOf(potenz).length(); i1++) {
+                int num = Integer.parseInt(String.valueOf(String.valueOf(potenz).charAt(i1)));
+                stringPotenz += Calculator.POTENZEN.get(num);
+            }
+            PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + stringPotenz);
+            frame.dispose();
+        });
+
+        frame.add(field);
+        frame.add(finish);
+        frame.setVisible(true);
     }
 }
