@@ -31,6 +31,7 @@ public class GUI {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setLayout(null);
+        frame.addKeyListener(new KeyHandler());
 
         new PlaceObjects(frame);
 
