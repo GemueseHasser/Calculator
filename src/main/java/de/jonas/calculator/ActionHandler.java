@@ -38,12 +38,21 @@ public class ActionHandler implements ActionListener {
     public ActionHandler(@NotNull final JButton button) {
         this.button = button;
     }
+
+    /**
+     * Erzeugt eine neue Instanz des {@link ActionHandler}, womit auf die Klasse und dessen Methoden zugegriffen werden
+     * kann. Hiermit wird kein Button-Klick gehandhabt!
+     */
+    public ActionHandler() {
+        this.button = null;
+    }
     //</editor-fold>
 
 
     //<editor-fold desc="implementation">
     @Override
     public void actionPerformed(final ActionEvent actionEvent) {
+        assert button != null;
         performAction(button.getText());
     }
     //</editor-fold>
@@ -55,7 +64,7 @@ public class ActionHandler implements ActionListener {
      */
     @SneakyThrows
     @SuppressWarnings("checkstyle:IllegalCatch")
-    public static void performAction(@NotNull final String text) {
+    public void performAction(@NotNull final String text) {
         if (text.equalsIgnoreCase("=")) {
             ScriptEngineManager manager = new ScriptEngineManager();
             ScriptEngine engine = manager.getEngineByName("js");
@@ -94,21 +103,30 @@ public class ActionHandler implements ActionListener {
 
         if (text.equalsIgnoreCase("X²")) {
             PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + "²");
-            eval += "*" + getLastNumber();
+            eval += "*" + getLastNumber(eval);
             return;
         }
 
         if (text.equalsIgnoreCase("X³")) {
             PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + "³");
-            eval += "*" + getLastNumber() + "*" + getLastNumber();
+            eval += "*" + getLastNumber(eval) + "*" + getLastNumber(eval);
+            return;
+        }
+
+        if (text.equalsIgnoreCase("Xʸ")) {
+            final String number = getLastNumber(eval);
+            final int potenz = 4;
+            for (int i = 1; i < potenz; i++) {
+                eval += "*" + number;
+            }
             return;
         }
         PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + text);
         eval += text;
     }
 
-    private static String getLastNumber() {
-        String subText = PlaceObjects.getCalcField().getText();
+    private String getLastNumber(@NotNull final String text) {
+        String subText = text;
         StringBuilder number = new StringBuilder();
 
         while (!(
