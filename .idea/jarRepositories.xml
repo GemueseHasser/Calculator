@@ -26,5 +26,10 @@
       <option name="name" value="Lombok" />
       <option name="url" value="https://mvnrepository.com/artifact/org.projectlombok/lombok" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="mysql" />
+      <option name="name" value="mysql" />
+      <option name="url" value="https://mvnrepository.com/artifact/mysql/mysql-connector-java" />
+    </remote-repository>
   </component>
 </project>

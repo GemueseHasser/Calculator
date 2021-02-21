@@ -1,6 +1,7 @@
 package de.jonas;
 
 import de.jonas.calculator.GUI;
+import de.jonas.database.Database;
 
 import java.util.HashMap;
 
@@ -19,6 +20,7 @@ public class Calculator {
      * @param args .
      */
     public static void main(final String[] args) {
+        new Database();
         new GUI();
         initializePotenzen();
     }
