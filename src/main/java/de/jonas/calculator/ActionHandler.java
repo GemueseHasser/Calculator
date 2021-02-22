@@ -108,7 +108,7 @@ public class ActionHandler implements ActionListener {
     public void performAction(@NotNull final String text) {
         switch (text) {
             case "=":
-                ScriptEngineManager manager = new ScriptEngineManager();
+                ScriptEngineManager manager = new ScriptEngineManager(null);
                 ScriptEngine engine = manager.getEngineByName("js");
                 Object result = null;
                 try {
@@ -120,6 +120,7 @@ public class ActionHandler implements ActionListener {
                     );
                 } catch (final Exception e) {
                     System.out.println("Bitte gib einen mathematisch richtigen Ausdruck an!");
+                    e.printStackTrace();
                 }
                 writeResultInDatabase(String.valueOf(result));
                 final String finalEval = " " + String.valueOf(result).replace(".", ",");
