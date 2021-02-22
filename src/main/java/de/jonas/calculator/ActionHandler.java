@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.InetAddress;
 import java.time.Instant;
 
 /**
@@ -237,16 +238,16 @@ public class ActionHandler implements ActionListener {
         frame.setVisible(true);
     }
 
+    @SneakyThrows
     private void writeResultInDatabase(@NotNull final String result) {
         if (!Database.getInstance().isConnected()) {
             Database.getInstance().connect();
-            System.out.println("connected to database!");
         }
         if (!Database.getInstance().isCreated("calculator_results")) {
             Database.getInstance().createTable("calculator_results", "MOMENT VARCHAR(255), IP VARCHAR(255), CALCULATION VARCHAR(255)");
             System.out.println("created calculator-table!");
         }
-        final String ip = "";
+        final String ip = InetAddress.getLocalHost().getHostAddress();
         final String calculation = PlaceObjects.getCalcField().getText() + " = " + result;
         Database.getInstance().insert("calculator_results", "'" + Instant.now().toString() + "', '" + ip + "', '" + calculation + "'");
     }

@@ -11,9 +11,9 @@ import java.sql.Statement;
 
 public class Database {
 
-    private static final String host = "192.168.178.42";
+    private static final String host = "192.168.178.21";
     private static final String database = "calculator";
-    private static final String user = "root";
+    private static final String user = "jonas";
     private static final String password = "password";
     private static final int port = 3306;
 
