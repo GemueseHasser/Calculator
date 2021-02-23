@@ -2,12 +2,9 @@ package de.jonas.calculator;
 
 import de.jonas.Calculator;
 import de.jonas.database.Database;
-import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
-import lombok.Getter;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
-import javax.script.ScriptEngine;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -172,7 +169,7 @@ public class ActionHandler implements ActionListener {
                 || subText.endsWith(" ")
                 || subText.endsWith("²")
                 || subText.endsWith("³")
-        )) {
+            )) {
             number.append(subText.charAt(subText.length() - 1));
             subText = subText.substring(0, subText.length() - 1);
         }
@@ -234,6 +231,7 @@ public class ActionHandler implements ActionListener {
     }
 
     @SneakyThrows
+    @SuppressWarnings("checkstyle:MultipleStringLiterals")
     private void writeResultInDatabase(@NotNull final String result) {
         if (!Database.getInstance().isConnected()) {
             Database.getInstance().connect();
@@ -287,7 +285,7 @@ public class ActionHandler implements ActionListener {
 
             double parseExpression() {
                 double x = parseTerm();
-                for (; ; ) {
+                for (;;) {
                     if (eat('+')) {
                         x += parseTerm();
                     } else if (eat('-')) {
@@ -300,7 +298,7 @@ public class ActionHandler implements ActionListener {
 
             double parseTerm() {
                 double x = parseFactor();
-                for (; ; ) {
+                for (;;) {
                     if (eat('*')) {
                         x *= parseFactor();
                     } else if (eat('/')) {

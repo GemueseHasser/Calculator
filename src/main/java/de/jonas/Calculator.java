@@ -1,6 +1,5 @@
 package de.jonas;
 
-import de.jonas.calculator.ActionHandler;
 import de.jonas.calculator.GUI;
 import de.jonas.database.Database;
 import lombok.SneakyThrows;
