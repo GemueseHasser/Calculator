@@ -2,11 +2,12 @@ package de.jonas.calculator;
 
 import de.jonas.Calculator;
 import de.jonas.database.Database;
+import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -108,20 +109,13 @@ public class ActionHandler implements ActionListener {
     public void performAction(@NotNull final String text) {
         switch (text) {
             case "=":
-                ScriptEngineManager manager = new ScriptEngineManager(null);
-                ScriptEngine engine = manager.getEngineByName("js");
-                Object result = null;
-                try {
-                    result = engine.eval(
-                        eval
-                            .replace("÷", "/")
-                            .replace("×", "*")
-                            .replace(",", ".")
-                    );
-                } catch (final Exception e) {
-                    System.out.println("Bitte gib einen mathematisch richtigen Ausdruck an!");
-                    e.printStackTrace();
-                }
+                final double result = eval(
+                    eval
+                        .replace("÷", "/")
+                        .replace("×", "*")
+                        .replace(",", ".")
+                        .replace("√", "sqrt")
+                );
                 writeResultInDatabase(String.valueOf(result));
                 final String finalEval = " " + String.valueOf(result).replace(".", ",");
                 PlaceObjects.getCalcField().setText(finalEval);
@@ -245,11 +239,118 @@ public class ActionHandler implements ActionListener {
             Database.getInstance().connect();
         }
         if (!Database.getInstance().isCreated("calculator_results")) {
-            Database.getInstance().createTable("calculator_results", "MOMENT VARCHAR(255), IP VARCHAR(255), CALCULATION VARCHAR(255)");
+            Database.getInstance().createTable(
+                "calculator_results",
+                "MOMENT VARCHAR(255), IP VARCHAR(255), CALCULATION VARCHAR(255)"
+            );
             System.out.println("created calculator-table!");
         }
         final String ip = InetAddress.getLocalHost().getHostAddress();
         final String calculation = PlaceObjects.getCalcField().getText() + " = " + result;
-        Database.getInstance().insert("calculator_results", "'" + Instant.now().toString() + "', '" + ip + "', '" + calculation + "'");
+        Database.getInstance().insert(
+            "calculator_results",
+            "'" + Instant.now().toString() + "', '" + ip + "', '" + calculation + "'"
+        );
+    }
+
+    /**
+     * Berechnet einen String wie eval().
+     *
+     * @param str Der String der mathematisch berechnet wird.
+     *
+     * @return Das Ergebnis der Rechnung.
+     */
+    public static double eval(@NotNull final String str) {
+        return new Object() {
+            private int pos = -1;
+            private int ch;
+
+            void nextChar() {
+                ch = (++pos < str.length()) ? str.charAt(pos) : -1;
+            }
+
+            boolean eat(final int charToEat) {
+                while (ch == ' ') nextChar();
+                if (ch == charToEat) {
+                    nextChar();
+                    return true;
+                }
+                return false;
+            }
+
+            double parse() {
+                nextChar();
+                double x = parseExpression();
+                if (pos < str.length()) throw new RuntimeException("Unexpected: " + (char) ch);
+                return x;
+            }
+
+            double parseExpression() {
+                double x = parseTerm();
+                for (; ; ) {
+                    if (eat('+')) {
+                        x += parseTerm();
+                    } else if (eat('-')) {
+                        x -= parseTerm();
+                    } else {
+                        return x;
+                    }
+                }
+            }
+
+            double parseTerm() {
+                double x = parseFactor();
+                for (; ; ) {
+                    if (eat('*')) {
+                        x *= parseFactor();
+                    } else if (eat('/')) {
+                        x /= parseFactor();
+                    } else {
+                        return x;
+                    }
+                }
+            }
+
+            double parseFactor() {
+                if (eat('+')) return parseFactor();
+                if (eat('-')) return -parseFactor();
+
+                double x;
+                int startPos = this.pos;
+                if (eat('(')) {
+                    x = parseExpression();
+                    eat(')');
+                } else if ((ch >= '0' && ch <= '9') || ch == '.') {
+                    while ((ch >= '0' && ch <= '9') || ch == '.') nextChar();
+                    x = Double.parseDouble(str.substring(startPos, this.pos));
+                } else if (ch >= 'a' && ch <= 'z') {
+                    while (ch >= 'a' && ch <= 'z') nextChar();
+                    String func = str.substring(startPos, this.pos);
+                    x = parseFactor();
+                    switch (func) {
+                        case "sqrt":
+                            x = Math.sqrt(x);
+                            break;
+                        case "sin":
+                            x = Math.sin(Math.toRadians(x));
+                            break;
+                        case "cos":
+                            x = Math.cos(Math.toRadians(x));
+                            break;
+                        case "tan":
+                            x = Math.tan(Math.toRadians(x));
+                            break;
+                        default:
+                            throw new RuntimeException("Unknown function: " + func);
+                    }
+                } else {
+                    throw new RuntimeException("Unexpected: " + (char) ch);
+                }
+
+                if (eat('^')) x = Math.pow(x, parseFactor());
+
+                return x;
+            }
+        }.parse();
     }
 }
