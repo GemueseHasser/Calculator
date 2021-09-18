@@ -10,8 +10,12 @@ import java.util.HashMap;
  */
 public class Calculator {
 
+    //<editor-fold desc="CONSTANTS">
     /** Es werden alle Potenzen basierend auf der normalen Zahl gespeichert (von 0 bis 9). */
     public static final HashMap<Integer, String> POTENZEN = new HashMap<>();
+    //</editor-fold>
+
+    //<editor-fold desc="initialising">
 
     /**
      * Die Anwendung wird initialisiert und für den Nutzer verwendbar gemacht.
@@ -22,6 +26,7 @@ public class Calculator {
         new GUI();
         initializePotenzen();
     }
+    //</editor-fold>
 
     @SuppressWarnings("checkstyle:MagicNumber")
     private static void initializePotenzen() {

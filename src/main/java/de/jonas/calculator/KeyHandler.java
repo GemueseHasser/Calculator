@@ -7,8 +7,9 @@ import java.awt.event.KeyListener;
  * Über diesen {@link KeyListener} wird überprüft welche tasten gedrückt werden und welche Aktionen bei dem jeweiligen
  * Tastendruck ausgeführt werden sollen.
  */
-public class KeyHandler implements KeyListener {
+public final class KeyHandler implements KeyListener {
 
+    //<editor-fold desc="implementation">
     @Override
     public void keyTyped(final KeyEvent e) {
 
@@ -114,4 +115,5 @@ public class KeyHandler implements KeyListener {
     public void keyReleased(final KeyEvent e) {
 
     }
+    //</editor-fold>
 }

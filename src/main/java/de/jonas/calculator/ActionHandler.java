@@ -17,7 +17,7 @@ import java.awt.event.ActionListener;
 /**
  * Der {@link ActionListener}, der wartet, bis ein Button gedrückt wird, und dann die jeweilige Aktion ausführt.
  */
-public class ActionHandler implements ActionListener {
+public final class ActionHandler implements ActionListener {
 
     //<editor-fold desc="CONSTANTS">
 
@@ -105,8 +105,8 @@ public class ActionHandler implements ActionListener {
     public void performAction(@NotNull final String text) {
         switch (text) {
             case "=":
-                ScriptEngineManager manager = new ScriptEngineManager();
-                ScriptEngine engine = manager.getEngineByName("js");
+                final ScriptEngineManager manager = new ScriptEngineManager();
+                final ScriptEngine engine = manager.getEngineByName("js");
                 Object result = null;
                 try {
                     result = engine.eval(
@@ -119,34 +119,34 @@ public class ActionHandler implements ActionListener {
                     System.out.println("Bitte gib einen mathematisch richtigen Ausdruck an!");
                 }
                 final String finalEval = " " + String.valueOf(result).replace(".", ",");
-                PlaceObjects.getCalcField().setText(finalEval);
+                ObjectPlacer.getCalcField().setText(finalEval);
                 eval = finalEval;
                 break;
 
             case "C":
-                PlaceObjects.getCalcField().setText(" ");
+                ObjectPlacer.getCalcField().setText(" ");
                 eval = " ";
                 break;
 
             case "⌫":
-                if (PlaceObjects.getCalcField().getText().length() <= 1) {
+                if (ObjectPlacer.getCalcField().getText().length() <= 1) {
                     break;
                 }
-                PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText().substring(
+                ObjectPlacer.getCalcField().setText(ObjectPlacer.getCalcField().getText().substring(
                     0,
-                    PlaceObjects.getCalcField().getText().length() - 1
+                    ObjectPlacer.getCalcField().getText().length() - 1
                     )
                 );
                 eval = eval.substring(0, eval.length() - 1);
                 break;
 
             case "X²":
-                PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + "²");
+                ObjectPlacer.getCalcField().setText(ObjectPlacer.getCalcField().getText() + "²");
                 eval += "*" + getLastNumber(eval);
                 break;
 
             case "X³":
-                PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + "³");
+                ObjectPlacer.getCalcField().setText(ObjectPlacer.getCalcField().getText() + "³");
                 eval += "*" + getLastNumber(eval) + "*" + getLastNumber(eval);
                 break;
 
@@ -155,7 +155,7 @@ public class ActionHandler implements ActionListener {
                 break;
 
             default:
-                PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + text);
+                ObjectPlacer.getCalcField().setText(ObjectPlacer.getCalcField().getText() + text);
                 eval += text;
                 break;
         }
@@ -163,7 +163,7 @@ public class ActionHandler implements ActionListener {
 
     private String getLastNumber(@NotNull final String text) {
         String subText = text;
-        StringBuilder number = new StringBuilder();
+        final StringBuilder number = new StringBuilder();
 
         while (!(
             subText.endsWith("+")
@@ -178,7 +178,7 @@ public class ActionHandler implements ActionListener {
             subText = subText.substring(0, subText.length() - 1);
         }
 
-        StringBuilder result = new StringBuilder();
+        final StringBuilder result = new StringBuilder();
 
         for (int i = number.toString().length() - 1; i >= 0; i--) {
             result.append(number.charAt(i));
@@ -215,17 +215,24 @@ public class ActionHandler implements ActionListener {
         finish.setBackground(Color.LIGHT_GRAY);
         finish.setFocusable(false);
         finish.addActionListener(actionEvent -> {
+            final StringBuilder evalBuilder = new StringBuilder();
             final String number = getLastNumber(eval);
             final int potenz = Integer.parseInt(field.getText());
+
             for (int i = 1; i < potenz; i++) {
-                eval += "*" + number;
+                evalBuilder.append("*").append(number);
             }
-            String stringPotenz = "";
+
+            eval += evalBuilder;
+
+            final StringBuilder stringPotenz = new StringBuilder();
+
             for (int i1 = 0; i1 < String.valueOf(potenz).length(); i1++) {
                 int num = Integer.parseInt(String.valueOf(String.valueOf(potenz).charAt(i1)));
-                stringPotenz += Calculator.POTENZEN.get(num);
+                stringPotenz.append(Calculator.POTENZEN.get(num));
             }
-            PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + stringPotenz);
+
+            ObjectPlacer.getCalcField().setText(ObjectPlacer.getCalcField().getText() + stringPotenz);
             frame.dispose();
         });
 
