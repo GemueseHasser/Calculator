@@ -14,10 +14,9 @@
 
     <repositories>
         <repository>
-            <id>maven-install-plugin</id>
-            <url>https://mvnrepository.com/artifact/org.apache.maven.plugins/</url>
+            <id>Jetbrains-Annotations</id>
+            <url>https://mvnrepository.com/artifact/org.jetbrains/annotations</url>
         </repository>
-
         <repository>
             <id>Lombok</id>
             <url>https://mvnrepository.com/artifact/org.projectlombok/lombok</url>
@@ -26,38 +25,16 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-install-plugin</artifactId>
-            <version>2.4</version>
-            <type>maven-plugin</type>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-deploy-plugin</artifactId>
-            <version>2.7</version>
-            <type>maven-plugin</type>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-site-plugin</artifactId>
-            <version>3.3</version>
-            <type>maven-plugin</type>
-        </dependency>
-
-        <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
-            <scope>compile</scope>
+            <version>22.0.0</version>
+            <scope>provided</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.16</version>
+            <version>1.18.20</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -78,7 +55,6 @@
         </resources>
 
         <plugins>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -118,7 +94,6 @@
                     </archive>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 </project>
