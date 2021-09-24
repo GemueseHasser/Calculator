@@ -1,7 +1,6 @@
 package de.jonas.calculator;
 
 import de.jonas.Calculator;
-import de.jonas.database.Database;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,13 +11,11 @@ import javax.swing.JTextField;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.InetAddress;
-import java.time.Instant;
 
 /**
  * Der {@link ActionListener}, der wartet, bis ein Button gedrückt wird, und dann die jeweilige Aktion ausführt.
  */
-public class ActionHandler implements ActionListener {
+public final class ActionHandler implements ActionListener {
 
     //<editor-fold desc="CONSTANTS">
 
@@ -113,7 +110,6 @@ public class ActionHandler implements ActionListener {
                         .replace(",", ".")
                         .replace("√", "sqrt")
                 );
-                writeResultInDatabase(String.valueOf(result));
                 final String finalEval = " " + String.valueOf(result).replace(".", ",");
                 PlaceObjects.getCalcField().setText(finalEval);
                 eval = finalEval;
@@ -228,27 +224,6 @@ public class ActionHandler implements ActionListener {
         frame.add(field);
         frame.add(finish);
         frame.setVisible(true);
-    }
-
-    @SneakyThrows
-    @SuppressWarnings("checkstyle:MultipleStringLiterals")
-    private void writeResultInDatabase(@NotNull final String result) {
-        if (!Database.getInstance().isConnected()) {
-            Database.getInstance().connect();
-        }
-        if (!Database.getInstance().isCreated("calculator_results")) {
-            Database.getInstance().createTable(
-                "calculator_results",
-                "MOMENT VARCHAR(255), IP VARCHAR(255), CALCULATION VARCHAR(255)"
-            );
-            System.out.println("created calculator-table!");
-        }
-        final String ip = InetAddress.getLocalHost().getHostAddress();
-        final String calculation = PlaceObjects.getCalcField().getText() + " = " + result;
-        Database.getInstance().insert(
-            "calculator_results",
-            "'" + Instant.now().toString() + "', '" + ip + "', '" + calculation + "'"
-        );
     }
 
     /**

@@ -1,7 +1,6 @@
 package de.jonas;
 
 import de.jonas.calculator.GUI;
-import de.jonas.database.Database;
 import lombok.SneakyThrows;
 
 import java.util.HashMap;
@@ -22,10 +21,8 @@ public class Calculator {
      */
     @SneakyThrows
     public static void main(final String[] args) {
-        new Database();
         new GUI();
         initializePotenzen();
-        Database.getInstance().connect();
     }
 
     @SuppressWarnings("checkstyle:MagicNumber")

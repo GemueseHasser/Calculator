@@ -8,7 +8,7 @@ import javax.swing.JFrame;
  * Das {@link GUI Graphical-User-Interface}, welches die Visualisierung der Ein- und Ausgabe des {@link Calculator
  * Taschenrechners} regelt.
  */
-public class GUI {
+public final class GUI {
 
     //<editor-fold desc="CONSTANTS">
     /** Die Breite des Fensters. */
