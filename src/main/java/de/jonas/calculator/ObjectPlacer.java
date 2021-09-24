@@ -16,7 +16,7 @@ import java.awt.Font;
  * Auf ein bestimmtes {@link JFrame Fenster} werden alle nötigen Objekte, die für einen Taschenrechner nötig sind
  * platziert.
  */
-public final class PlaceObjects {
+public final class ObjectPlacer {
 
     //<editor-fold desc="CONSTANTS">
     /** Die Schriftgröße der {@link Font Schriftart} aller Objekte. */
@@ -42,16 +42,24 @@ public final class PlaceObjects {
     //<editor-fold desc="CONSTRUCTORS">
 
     /**
-     * Es wird eine neue und vollständig unabhängige Instanz des {@link PlaceObjects} erzeugt. In einem bestimmten
+     * Es wird eine neue und vollständig unabhängige Instanz des {@link ObjectPlacer} erzeugt. In einem bestimmten
      * {@link JFrame Fenster} werden mithilfe dieser Instanz alle nötigen Objekte platziert, die für einen
      * Taschenrechner von Nutzen sind.
      *
      * @param frame Das {@link JFrame Fenster}, in dem die Änderungen vorgenommen werden.
      */
     @SuppressWarnings("checkstyle:MagicNumber")
-    public PlaceObjects(@NotNull final JFrame frame) {
+    public ObjectPlacer(@NotNull final JFrame frame) {
         this.frame = frame;
         this.font = new Font("Arial", Font.BOLD, FONT_SIZE);
+    }
+    //</editor-fold>
+
+
+    /**
+     * Platziert alle nötigen Objekte, die für einen Taschenrechner von Nutzen sind.
+     */
+    public void place() {
         final int width = frame.getWidth();
         final int height = frame.getHeight();
 
@@ -59,7 +67,7 @@ public final class PlaceObjects {
         final int buttonheight = height / 7 - 5;
 
         // text field
-        JTextField field = new JTextField(" ");
+        final JTextField field = new JTextField(" ");
         field.setBounds(0, 0, width - 12, buttonheight);
         field.setFont(font);
         field.setEnabled(false);
@@ -101,7 +109,7 @@ public final class PlaceObjects {
         placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight * 6, ",");
 
         // equals button
-        JButton equals = new JButton("=");
+        final JButton equals = new JButton("=");
         equals.setOpaque(true);
         equals.setBackground(Color.DARK_GRAY);
         equals.setFocusable(false);

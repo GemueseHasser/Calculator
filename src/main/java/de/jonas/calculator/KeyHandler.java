@@ -9,6 +9,7 @@ import java.awt.event.KeyListener;
  */
 public final class KeyHandler implements KeyListener {
 
+    //<editor-fold desc="implementation">
     @Override
     public void keyTyped(final KeyEvent e) {
 
@@ -114,4 +115,5 @@ public final class KeyHandler implements KeyListener {
     public void keyReleased(final KeyEvent e) {
 
     }
+    //</editor-fold>
 }

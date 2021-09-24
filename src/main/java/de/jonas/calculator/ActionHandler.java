@@ -111,34 +111,34 @@ public final class ActionHandler implements ActionListener {
                         .replace("√", "sqrt")
                 );
                 final String finalEval = " " + String.valueOf(result).replace(".", ",");
-                PlaceObjects.getCalcField().setText(finalEval);
+                ObjectPlacer.getCalcField().setText(finalEval);
                 eval = finalEval;
                 break;
 
             case "C":
-                PlaceObjects.getCalcField().setText(" ");
+                ObjectPlacer.getCalcField().setText(" ");
                 eval = " ";
                 break;
 
             case "⌫":
-                if (PlaceObjects.getCalcField().getText().length() <= 1) {
+                if (ObjectPlacer.getCalcField().getText().length() <= 1) {
                     break;
                 }
-                PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText().substring(
+                ObjectPlacer.getCalcField().setText(ObjectPlacer.getCalcField().getText().substring(
                     0,
-                    PlaceObjects.getCalcField().getText().length() - 1
+                    ObjectPlacer.getCalcField().getText().length() - 1
                     )
                 );
                 eval = eval.substring(0, eval.length() - 1);
                 break;
 
             case "X²":
-                PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + "²");
+                ObjectPlacer.getCalcField().setText(ObjectPlacer.getCalcField().getText() + "²");
                 eval += "*" + getLastNumber(eval);
                 break;
 
             case "X³":
-                PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + "³");
+                ObjectPlacer.getCalcField().setText(ObjectPlacer.getCalcField().getText() + "³");
                 eval += "*" + getLastNumber(eval) + "*" + getLastNumber(eval);
                 break;
 
@@ -147,7 +147,7 @@ public final class ActionHandler implements ActionListener {
                 break;
 
             default:
-                PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + text);
+                ObjectPlacer.getCalcField().setText(ObjectPlacer.getCalcField().getText() + text);
                 eval += text;
                 break;
         }
@@ -207,17 +207,23 @@ public final class ActionHandler implements ActionListener {
         finish.setBackground(Color.LIGHT_GRAY);
         finish.setFocusable(false);
         finish.addActionListener(actionEvent -> {
+            final StringBuilder evalBuilder = new StringBuilder();
             final String number = getLastNumber(eval);
             final int potenz = Integer.parseInt(field.getText());
+
             for (int i = 1; i < potenz; i++) {
-                eval += "*" + number;
+                evalBuilder.append("*").append(number);
             }
-            String stringPotenz = "";
+
+            eval += evalBuilder;
+
+            final StringBuilder stringPotenz = new StringBuilder();
+
             for (int i1 = 0; i1 < String.valueOf(potenz).length(); i1++) {
                 int num = Integer.parseInt(String.valueOf(String.valueOf(potenz).charAt(i1)));
-                stringPotenz += Calculator.POTENZEN.get(num);
+                stringPotenz.append(Calculator.POTENZEN.get(num));
             }
-            PlaceObjects.getCalcField().setText(PlaceObjects.getCalcField().getText() + stringPotenz);
+            ObjectPlacer.getCalcField().setText(ObjectPlacer.getCalcField().getText() + stringPotenz);
             frame.dispose();
         });
 

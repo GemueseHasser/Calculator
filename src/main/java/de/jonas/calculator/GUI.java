@@ -33,7 +33,7 @@ public final class GUI {
         frame.setLayout(null);
         frame.addKeyListener(new KeyHandler());
 
-        new PlaceObjects(frame);
+        new ObjectPlacer(frame).place();
 
         frame.setVisible(true);
     }
