@@ -119,6 +119,7 @@ public final class ObjectPlacer {
         equals.addActionListener(new ActionHandler(equals));
         frame.add(equals);
     }
+    //</editor-fold>
 
 
     /**

@@ -1,6 +1,7 @@
 package de.jonas;
 
 import de.jonas.calculator.GUI;
+import lombok.SneakyThrows;
 
 import java.util.HashMap;
 
@@ -22,6 +23,7 @@ public class Calculator {
      *
      * @param args .
      */
+    @SneakyThrows
     public static void main(final String[] args) {
         new GUI();
         initializePotenzen();

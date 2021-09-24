@@ -4,8 +4,6 @@ import de.jonas.Calculator;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -105,19 +103,13 @@ public final class ActionHandler implements ActionListener {
     public void performAction(@NotNull final String text) {
         switch (text) {
             case "=":
-                final ScriptEngineManager manager = new ScriptEngineManager();
-                final ScriptEngine engine = manager.getEngineByName("js");
-                Object result = null;
-                try {
-                    result = engine.eval(
-                        eval
-                            .replace("÷", "/")
-                            .replace("×", "*")
-                            .replace(",", ".")
-                    );
-                } catch (final Exception e) {
-                    System.out.println("Bitte gib einen mathematisch richtigen Ausdruck an!");
-                }
+                final double result = eval(
+                    eval
+                        .replace("÷", "/")
+                        .replace("×", "*")
+                        .replace(",", ".")
+                        .replace("√", "sqrt")
+                );
                 final String finalEval = " " + String.valueOf(result).replace(".", ",");
                 ObjectPlacer.getCalcField().setText(finalEval);
                 eval = finalEval;
@@ -163,7 +155,7 @@ public final class ActionHandler implements ActionListener {
 
     private String getLastNumber(@NotNull final String text) {
         String subText = text;
-        final StringBuilder number = new StringBuilder();
+        StringBuilder number = new StringBuilder();
 
         while (!(
             subText.endsWith("+")
@@ -173,12 +165,12 @@ public final class ActionHandler implements ActionListener {
                 || subText.endsWith(" ")
                 || subText.endsWith("²")
                 || subText.endsWith("³")
-        )) {
+            )) {
             number.append(subText.charAt(subText.length() - 1));
             subText = subText.substring(0, subText.length() - 1);
         }
 
-        final StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder();
 
         for (int i = number.toString().length() - 1; i >= 0; i--) {
             result.append(number.charAt(i));
@@ -231,7 +223,6 @@ public final class ActionHandler implements ActionListener {
                 int num = Integer.parseInt(String.valueOf(String.valueOf(potenz).charAt(i1)));
                 stringPotenz.append(Calculator.POTENZEN.get(num));
             }
-
             ObjectPlacer.getCalcField().setText(ObjectPlacer.getCalcField().getText() + stringPotenz);
             frame.dispose();
         });
@@ -239,5 +230,106 @@ public final class ActionHandler implements ActionListener {
         frame.add(field);
         frame.add(finish);
         frame.setVisible(true);
+    }
+
+    /**
+     * Berechnet einen String wie eval().
+     *
+     * @param str Der String der mathematisch berechnet wird.
+     *
+     * @return Das Ergebnis der Rechnung.
+     */
+    public static double eval(@NotNull final String str) {
+        return new Object() {
+            private int pos = -1;
+            private int ch;
+
+            void nextChar() {
+                ch = (++pos < str.length()) ? str.charAt(pos) : -1;
+            }
+
+            boolean eat(final int charToEat) {
+                while (ch == ' ') nextChar();
+                if (ch == charToEat) {
+                    nextChar();
+                    return true;
+                }
+                return false;
+            }
+
+            double parse() {
+                nextChar();
+                double x = parseExpression();
+                if (pos < str.length()) throw new RuntimeException("Unexpected: " + (char) ch);
+                return x;
+            }
+
+            double parseExpression() {
+                double x = parseTerm();
+                for (;;) {
+                    if (eat('+')) {
+                        x += parseTerm();
+                    } else if (eat('-')) {
+                        x -= parseTerm();
+                    } else {
+                        return x;
+                    }
+                }
+            }
+
+            double parseTerm() {
+                double x = parseFactor();
+                for (;;) {
+                    if (eat('*')) {
+                        x *= parseFactor();
+                    } else if (eat('/')) {
+                        x /= parseFactor();
+                    } else {
+                        return x;
+                    }
+                }
+            }
+
+            double parseFactor() {
+                if (eat('+')) return parseFactor();
+                if (eat('-')) return -parseFactor();
+
+                double x;
+                int startPos = this.pos;
+                if (eat('(')) {
+                    x = parseExpression();
+                    eat(')');
+                } else if ((ch >= '0' && ch <= '9') || ch == '.') {
+                    while ((ch >= '0' && ch <= '9') || ch == '.') nextChar();
+                    x = Double.parseDouble(str.substring(startPos, this.pos));
+                } else if (ch >= 'a' && ch <= 'z') {
+                    while (ch >= 'a' && ch <= 'z') nextChar();
+                    String func = str.substring(startPos, this.pos);
+                    x = parseFactor();
+                    switch (func) {
+                        case "sqrt":
+                            x = Math.sqrt(x);
+                            break;
+                        case "sin":
+                            x = Math.sin(Math.toRadians(x));
+                            break;
+                        case "cos":
+                            x = Math.cos(Math.toRadians(x));
+                            break;
+                        case "tan":
+                            x = Math.tan(Math.toRadians(x));
+                            break;
+                        default:
+                            throw new RuntimeException("Unknown function: " + func);
+                    }
+                } else {
+                    throw new RuntimeException("Unexpected: " + (char) ch);
+                }
+
+                if (eat('^')) x = Math.pow(x, parseFactor());
+
+                return x;
+            }
+        }.parse();
     }
 }
