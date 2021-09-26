@@ -14,7 +14,7 @@ public final class GUI {
     /** Die Breite des Fensters. */
     private static final int FRAME_WIDTH = 500;
     /** Die Höhe des Fensters. */
-    private static final int FRAME_HEIGHT = 750;
+    private static final int FRAME_HEIGHT = 850;
     //</editor-fold>
 
 
