@@ -18,6 +18,8 @@ import java.awt.event.ActionListener;
 public final class ActionHandler implements ActionListener {
 
     //<editor-fold desc="CONSTANTS">
+    /** Die Anzahl an Nachkommastellen, die der Taschenrechner haben soll. */
+    private static final int DECIMAL_PLACES = 14;
 
     //<editor-fold desc="potenz-frame">
     /** Die Breite des {@link JFrame Fensters}, welches nach einer entsprechenden Potenz fragt. */
@@ -103,13 +105,18 @@ public final class ActionHandler implements ActionListener {
     public void performAction(@NotNull final String text) {
         switch (text) {
             case "=":
-                final double result = eval(
+                double defaultResult = eval(
                     eval
                         .replace("÷", "/")
                         .replace("×", "*")
                         .replace(",", ".")
                         .replace("√", "sqrt")
                 );
+
+                final double factor = Math.pow(10, DECIMAL_PLACES);
+                defaultResult *= factor;
+                final double result = Math.round(defaultResult) / factor;
+
                 final String finalEval = " " + String.valueOf(result).replace(".", ",");
                 ObjectPlacer.getCalcField().setText(finalEval);
                 eval = finalEval;
