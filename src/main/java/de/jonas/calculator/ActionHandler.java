@@ -141,6 +141,7 @@ public final class ActionHandler implements ActionListener {
 
             case "X²":
                 ObjectPlacer.getCalcField().setText(ObjectPlacer.getCalcField().getText() + "²");
+                System.out.println(getLastNumber(eval));
                 eval += "*" + getLastNumber(eval);
                 break;
 
@@ -162,22 +163,31 @@ public final class ActionHandler implements ActionListener {
 
     private String getLastNumber(@NotNull final String text) {
         String subText = text;
-        StringBuilder number = new StringBuilder();
 
-        while (!(
-            subText.endsWith("+")
-                || subText.endsWith("-")
-                || subText.endsWith("×")
-                || subText.endsWith("÷")
-                || subText.endsWith(" ")
-                || subText.endsWith("²")
-                || subText.endsWith("³")
+        final StringBuilder number = new StringBuilder();
+        final StringBuilder result = new StringBuilder();
+
+        if (subText.endsWith(")")) {
+            while (!subText.endsWith("(")) {
+                number.append(subText.charAt(subText.length() - 1));
+                subText = subText.substring(0, subText.length() - 1);
+            }
+            number.append("(");
+        } else {
+            while (!(
+                subText.endsWith("+")
+                    || subText.endsWith("-")
+                    || subText.endsWith("×")
+                    || subText.endsWith("÷")
+                    || subText.endsWith(" ")
+                    || subText.endsWith("²")
+                    || subText.endsWith("³")
+                    || subText.endsWith("(")
             )) {
-            number.append(subText.charAt(subText.length() - 1));
-            subText = subText.substring(0, subText.length() - 1);
+                number.append(subText.charAt(subText.length() - 1));
+                subText = subText.substring(0, subText.length() - 1);
+            }
         }
-
-        StringBuilder result = new StringBuilder();
 
         for (int i = number.toString().length() - 1; i >= 0; i--) {
             result.append(number.charAt(i));
@@ -277,7 +287,7 @@ public final class ActionHandler implements ActionListener {
 
             double parseExpression() {
                 double x = parseTerm();
-                for (;;) {
+                for (; ; ) {
                     if (eat('+')) {
                         x += parseTerm();
                     } else if (eat('-')) {
@@ -290,7 +300,7 @@ public final class ActionHandler implements ActionListener {
 
             double parseTerm() {
                 double x = parseFactor();
-                for (;;) {
+                for (; ; ) {
                     if (eat('*')) {
                         x *= parseFactor();
                     } else if (eat('/')) {
