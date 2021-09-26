@@ -141,13 +141,15 @@ public final class ActionHandler implements ActionListener {
 
             case "X²":
                 ObjectPlacer.getCALC_FIELD().setText(ObjectPlacer.getCALC_FIELD().getText() + "²");
-                System.out.println(getLastNumber(eval));
-                eval += "*" + getLastNumber(eval);
+                addBracketBeforeLastNumber(true);
+                eval += "*" + getLastNumber(eval) + ")";
                 break;
 
             case "X³":
                 ObjectPlacer.getCALC_FIELD().setText(ObjectPlacer.getCALC_FIELD().getText() + "³");
-                eval += "*" + getLastNumber(eval) + "*" + getLastNumber(eval);
+                final String last = getLastNumber(eval);
+                addBracketBeforeLastNumber(false);
+                eval += "*" + last + "*" + last + ")";
                 break;
 
             case "Xʸ":
@@ -159,6 +161,14 @@ public final class ActionHandler implements ActionListener {
                 eval += text;
                 break;
         }
+    }
+
+    private void addBracketBeforeLastNumber(final boolean gerade) {
+        final String last = getLastNumber(eval);
+
+        eval = eval.substring(0, eval.length() - last.length())
+            + (gerade ? "-(" : "+(")
+            + eval.substring(eval.length() - last.length());
     }
 
     private String getLastNumber(@NotNull final String text) {
@@ -186,6 +196,10 @@ public final class ActionHandler implements ActionListener {
             )) {
                 number.append(subText.charAt(subText.length() - 1));
                 subText = subText.substring(0, subText.length() - 1);
+            }
+
+            if (subText.endsWith("-")) {
+                number.append("-");
             }
         }
 
@@ -228,11 +242,13 @@ public final class ActionHandler implements ActionListener {
             final String number = getLastNumber(eval);
             final int potenz = Integer.parseInt(field.getText());
 
+            addBracketBeforeLastNumber(potenz % 2 == 0);
+
             for (int i = 1; i < potenz; i++) {
                 evalBuilder.append("*").append(number);
             }
 
-            eval += evalBuilder;
+            eval += evalBuilder + ")";
 
             final StringBuilder stringPotenz = new StringBuilder();
 
