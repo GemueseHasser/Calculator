@@ -20,22 +20,56 @@ public final class ObjectPlacer {
 
     //<editor-fold desc="CONSTANTS">
     /** Die Schriftgröße der {@link Font Schriftart} aller Objekte. */
+    @Range(from = 0, to = Integer.MAX_VALUE)
     private static final int FONT_SIZE = 50;
-    //</editor-fold>
-
-
-    //<editor-fold desc="STATIC-FIELDS">
+    /** Die {@link Font Schriftart} in der alle Schriften auf den platzierten Objekten dargestellt werden. */
+    @NotNull
+    private static final Font FONT = new Font("Arial", Font.BOLD, FONT_SIZE);
     /** Das {@link JTextField Text-Feld}, welches die gesamte Rechnung aufführt. */
     @Getter
-    private static JTextField calcField;
+    @NotNull
+    private static final JTextField CALC_FIELD = new JTextField(" ");
+    /** Alle Titel der Buttons, die der Taschenrechner haben soll in der richtigen Reihenfolge. */
+    @NotNull
+    private static final String @NotNull [] BUTTONS = new String[]{
+        "(",
+        ")",
+        "sin",
+        "tan",
+        "X²",
+        "X³",
+        "Xʸ",
+        "√",
+        "C",
+        "÷",
+        "×",
+        "⌫",
+        "7",
+        "8",
+        "9",
+        "-",
+        "4",
+        "5",
+        "6",
+        "+",
+        "1",
+        "2",
+        "3",
+        " ",
+        " ",
+        "0",
+        ",",
+    };
+    /** Die Anzahl an Buttons, die sich in einer Zeile befinden sollen. */
+    @Range(from = 0, to = Integer.MAX_VALUE)
+    private static final int BUTTONS_PER_LINE = 4;
     //</editor-fold>
 
 
     //<editor-fold desc="LOCAL-FIELDS">
     /** Das Fenster, in das alle Objekte platziert werden. */
+    @NotNull
     private final JFrame frame;
-    /** Die {@link Font Schriftart} in der alle Schriften auf den platzierten Objekten dargestellt werden. */
-    private final Font font;
     //</editor-fold>
 
 
@@ -51,7 +85,6 @@ public final class ObjectPlacer {
     @SuppressWarnings("checkstyle:MagicNumber")
     public ObjectPlacer(@NotNull final JFrame frame) {
         this.frame = frame;
-        this.font = new Font("Arial", Font.BOLD, FONT_SIZE);
     }
     //</editor-fold>
 
@@ -60,77 +93,55 @@ public final class ObjectPlacer {
      * Platziert alle nötigen Objekte, die für einen Taschenrechner von Nutzen sind.
      */
     public void place() {
+        // frame width and height
         final int width = frame.getWidth();
         final int height = frame.getHeight();
 
-        final int buttonWidth = width / 4 - 3;
-        final int buttonheight = height / 8 - 5;
+        // button width and height (based on frame width and height)
+        final int buttonWidth = width / BUTTONS_PER_LINE - 3;
+        final int buttonHeight = height / (BUTTONS.length / BUTTONS_PER_LINE + 2) - 5;
 
         // text field
-        final JTextField field = new JTextField(" ");
-        field.setBounds(0, 0, width - 12, buttonheight);
-        field.setFont(font);
-        field.setEnabled(false);
-        field.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
-        frame.add(field);
-        calcField = field;
+        CALC_FIELD.setBounds(0, 0, width - 12, buttonHeight);
+        CALC_FIELD.setFont(FONT);
+        CALC_FIELD.setEnabled(false);
+        CALC_FIELD.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
 
-        // line 1
-        placeButton(buttonWidth, buttonheight, 0, buttonheight, "(");
-        placeButton(buttonWidth, buttonheight, buttonWidth, buttonheight, ")");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight, "sin");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 3, buttonheight, "tan");
+        // place default buttons
+        for (int i = 0; i < BUTTONS.length; i++) {
+            final String text = BUTTONS[i];
 
-        // line 2
-        placeButton(buttonWidth, buttonheight, 0, buttonheight * 2, "X²");
-        placeButton(buttonWidth, buttonheight, buttonWidth, buttonheight * 2, "X³");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight * 2, "Xʸ");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 3, buttonheight * 2, "√");
+            if (text.equals(" ")) {
+                continue;
+            }
 
-        // line 3
-        placeButton(buttonWidth, buttonheight, 0, buttonheight * 3, "C");
-        placeButton(buttonWidth, buttonheight, buttonWidth, buttonheight * 3, "÷");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight * 3, "×");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 3, buttonheight * 3, "⌫");
+            final int x = (i % BUTTONS_PER_LINE) * buttonWidth;
+            final int y = (i / BUTTONS_PER_LINE + 1) * buttonHeight;
 
-        // line 4
-        placeButton(buttonWidth, buttonheight, 0, buttonheight * 4, "7");
-        placeButton(buttonWidth, buttonheight, buttonWidth, buttonheight * 4, "8");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight * 4, "9");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 3, buttonheight * 4, "-");
-
-        // line 5
-        placeButton(buttonWidth, buttonheight, 0, buttonheight * 5, "4");
-        placeButton(buttonWidth, buttonheight, buttonWidth, buttonheight * 5, "5");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight * 5, "6");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 3, buttonheight * 5, "+");
-
-        // line 6
-        placeButton(buttonWidth, buttonheight, 0, buttonheight * 6, "1");
-        placeButton(buttonWidth, buttonheight, buttonWidth, buttonheight * 6, "2");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight * 6, "3");
-
-        // line 7
-        placeButton(buttonWidth, buttonheight, buttonWidth, buttonheight * 7, "0");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight * 7, ",");
+            placeButton(buttonWidth, buttonHeight, x, y, text);
+        }
 
         // equals button
         final JButton equals = new JButton("=");
-        equals.setOpaque(true);
-        equals.setBackground(Color.DARK_GRAY);
-        equals.setFocusable(false);
-        equals.setBounds(buttonWidth * 3, buttonheight * 6, buttonWidth, buttonheight * 2);
-        equals.setFont(font);
-        equals.setForeground(Color.WHITE);
-        equals.addActionListener(new ActionHandler(equals));
+
+        editButton(
+            equals,
+            buttonWidth,
+            buttonHeight * 2,
+            buttonWidth * 3,
+            buttonHeight * 6
+        );
+
+        // add different components
+        frame.add(CALC_FIELD);
         frame.add(equals);
     }
-    //</editor-fold>
 
 
     /**
      * Es wird ein Button in einem bestimmten {@link JFrame Fenster} platziert, an einer bestimmten Position, einer
-     * bestimmten Größe und versehen mit einem bestimmten Anzeige-Text.
+     * bestimmten Größe und versehen mit einem bestimmten Anzeige-Text. Dieser Button ist ein standard Button des
+     * Taschenrechners.
      *
      * @param width  Die Breite des Buttons.
      * @param height Die Höhe des Buttons.
@@ -146,14 +157,41 @@ public final class ObjectPlacer {
         @NotNull final String text
     ) {
         final JButton button = new JButton(text);
+
+        editButton(
+            button,
+            width,
+            height,
+            x,
+            y
+        );
+
+        frame.add(button);
+    }
+
+    /**
+     * Editiert die Eigenschaften eines bestimmten Buttons, also verändert beispielsweise die Farbe.
+     *
+     * @param button Der Button, welcher editiert werden soll.
+     * @param width  Die Breite des Buttons.
+     * @param height Die Höhe des Buttons.
+     * @param x      Die X-Koordinate des Buttons.
+     * @param y      Die Y-Koordinate des Buttons.
+     */
+    private void editButton(
+        @NotNull final JButton button,
+        @Range(from = 0, to = Integer.MAX_VALUE) final int width,
+        @Range(from = 0, to = Integer.MAX_VALUE) final int height,
+        @Range(from = 0, to = Integer.MAX_VALUE) final int x,
+        @Range(from = 0, to = Integer.MAX_VALUE) final int y
+    ) {
         button.setOpaque(true);
         button.setBackground(Color.DARK_GRAY);
         button.setFocusable(false);
         button.setBounds(x, y, width, height);
-        button.setFont(font);
+        button.setFont(FONT);
         button.setForeground(Color.WHITE);
         button.addActionListener(new ActionHandler(button));
-        frame.add(button);
     }
 
 }
