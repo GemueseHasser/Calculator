@@ -64,7 +64,7 @@ public final class ObjectPlacer {
         final int height = frame.getHeight();
 
         final int buttonWidth = width / 4 - 3;
-        final int buttonheight = height / 7 - 5;
+        final int buttonheight = height / 8 - 5;
 
         // text field
         final JTextField field = new JTextField(" ");
@@ -76,44 +76,50 @@ public final class ObjectPlacer {
         calcField = field;
 
         // line 1
-        placeButton(buttonWidth, buttonheight, 0, buttonheight, "X²");
-        placeButton(buttonWidth, buttonheight, buttonWidth, buttonheight, "X³");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight, "Xʸ");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 3, buttonheight, "√");
+        placeButton(buttonWidth, buttonheight, 0, buttonheight, "(");
+        placeButton(buttonWidth, buttonheight, buttonWidth, buttonheight, ")");
+        placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight, "sin");
+        placeButton(buttonWidth, buttonheight, buttonWidth * 3, buttonheight, "tan");
 
         // line 2
-        placeButton(buttonWidth, buttonheight, 0, buttonheight * 2, "C");
-        placeButton(buttonWidth, buttonheight, buttonWidth, buttonheight * 2, "÷");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight * 2, "×");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 3, buttonheight * 2, "⌫");
+        placeButton(buttonWidth, buttonheight, 0, buttonheight * 2, "X²");
+        placeButton(buttonWidth, buttonheight, buttonWidth, buttonheight * 2, "X³");
+        placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight * 2, "Xʸ");
+        placeButton(buttonWidth, buttonheight, buttonWidth * 3, buttonheight * 2, "√");
 
         // line 3
-        placeButton(buttonWidth, buttonheight, 0, buttonheight * 3, "7");
-        placeButton(buttonWidth, buttonheight, buttonWidth, buttonheight * 3, "8");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight * 3, "9");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 3, buttonheight * 3, "-");
+        placeButton(buttonWidth, buttonheight, 0, buttonheight * 3, "C");
+        placeButton(buttonWidth, buttonheight, buttonWidth, buttonheight * 3, "÷");
+        placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight * 3, "×");
+        placeButton(buttonWidth, buttonheight, buttonWidth * 3, buttonheight * 3, "⌫");
 
         // line 4
-        placeButton(buttonWidth, buttonheight, 0, buttonheight * 4, "4");
-        placeButton(buttonWidth, buttonheight, buttonWidth, buttonheight * 4, "5");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight * 4, "6");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 3, buttonheight * 4, "+");
+        placeButton(buttonWidth, buttonheight, 0, buttonheight * 4, "7");
+        placeButton(buttonWidth, buttonheight, buttonWidth, buttonheight * 4, "8");
+        placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight * 4, "9");
+        placeButton(buttonWidth, buttonheight, buttonWidth * 3, buttonheight * 4, "-");
 
         // line 5
-        placeButton(buttonWidth, buttonheight, 0, buttonheight * 5, "1");
-        placeButton(buttonWidth, buttonheight, buttonWidth, buttonheight * 5, "2");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight * 5, "3");
+        placeButton(buttonWidth, buttonheight, 0, buttonheight * 5, "4");
+        placeButton(buttonWidth, buttonheight, buttonWidth, buttonheight * 5, "5");
+        placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight * 5, "6");
+        placeButton(buttonWidth, buttonheight, buttonWidth * 3, buttonheight * 5, "+");
 
         // line 6
-        placeButton(buttonWidth, buttonheight, buttonWidth, buttonheight * 6, "0");
-        placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight * 6, ",");
+        placeButton(buttonWidth, buttonheight, 0, buttonheight * 6, "1");
+        placeButton(buttonWidth, buttonheight, buttonWidth, buttonheight * 6, "2");
+        placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight * 6, "3");
+
+        // line 7
+        placeButton(buttonWidth, buttonheight, buttonWidth, buttonheight * 7, "0");
+        placeButton(buttonWidth, buttonheight, buttonWidth * 2, buttonheight * 7, ",");
 
         // equals button
         final JButton equals = new JButton("=");
         equals.setOpaque(true);
         equals.setBackground(Color.DARK_GRAY);
         equals.setFocusable(false);
-        equals.setBounds(buttonWidth * 3, buttonheight * 5, buttonWidth, buttonheight * 2);
+        equals.setBounds(buttonWidth * 3, buttonheight * 6, buttonWidth, buttonheight * 2);
         equals.setFont(font);
         equals.setForeground(Color.WHITE);
         equals.addActionListener(new ActionHandler(equals));
