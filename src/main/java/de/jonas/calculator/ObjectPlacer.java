@@ -16,6 +16,7 @@ import java.awt.Font;
  * Auf ein bestimmtes {@link JFrame Fenster} werden alle nötigen Objekte, die für einen Taschenrechner nötig sind
  * platziert.
  */
+@NotNull
 public final class ObjectPlacer {
 
     //<editor-fold desc="CONSTANTS">

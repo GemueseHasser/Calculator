@@ -2,6 +2,7 @@ package de.jonas;
 
 import de.jonas.calculator.GUI;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
@@ -9,10 +10,12 @@ import java.util.HashMap;
  * Die Haupt- und Main-Klasse der Applikation, in der die Anwendung vollständig initialisiert wird, sodass sie für den
  * Nutzer verwendbar ist.
  */
+@NotNull
 public class Calculator {
 
     //<editor-fold desc="CONSTANTS">
     /** Es werden alle Potenzen basierend auf der normalen Zahl gespeichert (von 0 bis 9). */
+    @NotNull
     public static final HashMap<Integer, String> POTENZEN = new HashMap<>();
     //</editor-fold>
 

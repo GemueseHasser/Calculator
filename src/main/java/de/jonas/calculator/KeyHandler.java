@@ -1,5 +1,7 @@
 package de.jonas.calculator;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -7,6 +9,7 @@ import java.awt.event.KeyListener;
  * Über diesen {@link KeyListener} wird überprüft welche tasten gedrückt werden und welche Aktionen bei dem jeweiligen
  * Tastendruck ausgeführt werden sollen.
  */
+@NotNull
 public final class KeyHandler implements KeyListener {
 
     //<editor-fold desc="implementation">

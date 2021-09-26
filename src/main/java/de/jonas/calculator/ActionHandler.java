@@ -3,6 +3,8 @@ package de.jonas.calculator;
 import de.jonas.Calculator;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,38 +17,50 @@ import java.awt.event.ActionListener;
 /**
  * Der {@link ActionListener}, der wartet, bis ein Button gedrückt wird, und dann die jeweilige Aktion ausführt.
  */
+@NotNull
 public final class ActionHandler implements ActionListener {
 
     //<editor-fold desc="CONSTANTS">
     /** Die Anzahl an Nachkommastellen, die der Taschenrechner haben soll. */
+    @Range(from = 0, to = Integer.MAX_VALUE)
     private static final int DECIMAL_PLACES = 14;
 
     //<editor-fold desc="potenz-frame">
     /** Die Breite des {@link JFrame Fensters}, welches nach einer entsprechenden Potenz fragt. */
+    @Range(from = 0, to = Integer.MAX_VALUE)
     private static final int POTENZ_FRAME_WIDTH = 300;
     /** Die Höhe des {@link JFrame Fensters}, welches nach einer entsprechenden Potenz fragt. */
+    @Range(from = 0, to = Integer.MAX_VALUE)
     private static final int POTENZ_FRAME_HEIGHT = 150;
     //</editor-fold>
 
     //<editor-fold desc="potenz-frame-field">
     /** Die X-Koordinate des {@link JTextField Text-Feldes}, welche nach einer entsprechenden Potenz fragt. */
+    @Range(from = 0, to = Integer.MAX_VALUE)
     private static final int POTENZ_FRAME_FIELD_X = 10;
     /** Die Y-Koordinate des {@link JTextField Text-Feldes}, welche nach einer entsprechenden Potenz fragt. */
+    @Range(from = 0, to = Integer.MAX_VALUE)
     private static final int POTENZ_FRAME_FIELD_Y = 10;
     /** Die Breite des {@link JTextField Text-Feldes}, welche nach einer entsprechenden Potenz fragt. */
+    @Range(from = 0, to = Integer.MAX_VALUE)
     private static final int POTENZ_FRAME_FIELD_WIDTH = 270;
     /** Die Höhe des {@link JTextField Text-Feldes}, welche nach einer entsprechenden Potenz fragt. */
+    @Range(from = 0, to = Integer.MAX_VALUE)
     private static final int POTENZ_FRAME_FIELD_HEIGHT = 35;
     //</editor-fold>
 
     //<editor-fold desc="potenz-frame-button">
     /** Die X-Koordinate des {@link JButton Buttons}, welcher die Abfrage nach einer entsprechenden Potenz beendet. */
+    @Range(from = 0, to = Integer.MAX_VALUE)
     private static final int POTENZ_FRAME_BUTTON_X = 10;
     /** Die Y-Koordinate des {@link JButton Buttons}, welcher die Abfrage nach einer entsprechenden Potenz beendet. */
+    @Range(from = 0, to = Integer.MAX_VALUE)
     private static final int POTENZ_FRAME_BUTTON_Y = 55;
     /** Die Breite des {@link JButton Buttons}, welcher die Abfrage nach einer entsprechenden Potenz beendet. */
+    @Range(from = 0, to = Integer.MAX_VALUE)
     private static final int POTENZ_FRAME_BUTTON_WIDTH = 270;
     /** Die Höhe des {@link JButton Buttons}, welcher die Abfrage nach einer entsprechenden Potenz beendet. */
+    @Range(from = 0, to = Integer.MAX_VALUE)
     private static final int POTENZ_FRAME_BUTTON_HEIGHT = 35;
     //</editor-fold>
 
@@ -55,12 +69,14 @@ public final class ActionHandler implements ActionListener {
 
     //<editor-fold desc="STATIC-FIELDS">
     /** Der String, der im Hintergrund läuft und für den Nutzer unsichtbar ist, womit aber alles berechnet wird. */
+    @NotNull
     private static String eval = " ";
     //</editor-fold>
 
 
     //<editor-fold desc="LOCAL-FIELDS">
     /** Der {@link JButton Button}, der angeklickt wurde. */
+    @Nullable
     private final JButton button;
     //</editor-fold>
 
@@ -230,16 +246,16 @@ public final class ActionHandler implements ActionListener {
      *
      * @return Das Ergebnis der Rechnung.
      */
-    public static double eval(@NotNull final String term) {
+    private double eval(@NotNull final String term) {
         return new Object() {
             private int pos = -1;
             private int ch;
 
-            void nextChar() {
+            private void nextChar() {
                 ch = (++pos < term.length()) ? term.charAt(pos) : -1;
             }
 
-            boolean eat(final int charToEat) {
+            private boolean eat(final int charToEat) {
                 while (ch == ' ') nextChar();
                 if (ch == charToEat) {
                     nextChar();
@@ -248,7 +264,7 @@ public final class ActionHandler implements ActionListener {
                 return false;
             }
 
-            double parse() {
+            private double parse() {
                 nextChar();
                 double x = parseExpression();
 
@@ -259,7 +275,7 @@ public final class ActionHandler implements ActionListener {
                 return x;
             }
 
-            double parseExpression() {
+            private double parseExpression() {
                 double x = parseTerm();
                 for (; ; ) {
                     if (eat('+')) {
@@ -272,7 +288,7 @@ public final class ActionHandler implements ActionListener {
                 }
             }
 
-            double parseTerm() {
+            private double parseTerm() {
                 double x = parseFactor();
                 for (; ; ) {
                     if (eat('*')) {
@@ -285,7 +301,7 @@ public final class ActionHandler implements ActionListener {
                 }
             }
 
-            double parseFactor() {
+            private double parseFactor() {
                 if (eat('+')) return parseFactor();
                 if (eat('-')) return -parseFactor();
 
@@ -310,6 +326,7 @@ public final class ActionHandler implements ActionListener {
                             x = Math.sin(Math.toRadians(x));
                             break;
 
+                        // actually unused
                         case "cos":
                             x = Math.cos(Math.toRadians(x));
                             break;
