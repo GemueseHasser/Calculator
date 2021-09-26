@@ -242,17 +242,17 @@ public final class ActionHandler implements ActionListener {
     /**
      * Berechnet einen String wie eval().
      *
-     * @param str Der String der mathematisch berechnet wird.
+     * @param term Der String der mathematisch berechnet wird.
      *
      * @return Das Ergebnis der Rechnung.
      */
-    public static double eval(@NotNull final String str) {
+    public static double eval(@NotNull final String term) {
         return new Object() {
             private int pos = -1;
             private int ch;
 
             void nextChar() {
-                ch = (++pos < str.length()) ? str.charAt(pos) : -1;
+                ch = (++pos < term.length()) ? term.charAt(pos) : -1;
             }
 
             boolean eat(final int charToEat) {
@@ -267,7 +267,11 @@ public final class ActionHandler implements ActionListener {
             double parse() {
                 nextChar();
                 double x = parseExpression();
-                if (pos < str.length()) throw new RuntimeException("Unexpected: " + (char) ch);
+
+                if (pos < term.length()) {
+                    return 0;
+                }
+
                 return x;
             }
 
@@ -308,10 +312,10 @@ public final class ActionHandler implements ActionListener {
                     eat(')');
                 } else if ((ch >= '0' && ch <= '9') || ch == '.') {
                     while ((ch >= '0' && ch <= '9') || ch == '.') nextChar();
-                    x = Double.parseDouble(str.substring(startPos, this.pos));
+                    x = Double.parseDouble(term.substring(startPos, this.pos));
                 } else if (ch >= 'a' && ch <= 'z') {
                     while (ch >= 'a' && ch <= 'z') nextChar();
-                    String func = str.substring(startPos, this.pos);
+                    String func = term.substring(startPos, this.pos);
                     x = parseFactor();
                     switch (func) {
                         case "sqrt":
