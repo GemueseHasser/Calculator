@@ -334,7 +334,7 @@ public final class ActionHandler implements ActionListener {
                             throw new RuntimeException("Unknown function: " + func);
                     }
                 } else {
-                    throw new RuntimeException("Unexpected: " + (char) ch);
+                    return 0;
                 }
 
                 if (eat('^')) x = Math.pow(x, parseFactor());
