@@ -141,15 +141,12 @@ public final class ActionHandler implements ActionListener {
 
             case "X²":
                 ObjectPlacer.getCALC_FIELD().setText(ObjectPlacer.getCALC_FIELD().getText() + "²");
-                addBracketBeforeLastNumber(true);
-                eval += "*" + getLastNumber(eval) + ")";
+                eval += "^2";
                 break;
 
             case "X³":
                 ObjectPlacer.getCALC_FIELD().setText(ObjectPlacer.getCALC_FIELD().getText() + "³");
-                final String last = getLastNumber(eval);
-                addBracketBeforeLastNumber(false);
-                eval += "*" + last + "*" + last + ")";
+                eval += "^3";
                 break;
 
             case "Xʸ":
@@ -157,57 +154,26 @@ public final class ActionHandler implements ActionListener {
                 break;
 
             default:
+                // very unperformant
+                for (@NotNull final String potenz : Calculator.POTENZEN.values()) {
+                    if (ObjectPlacer.getCALC_FIELD().getText().endsWith(potenz)) {
+                        try {
+                            final int current = Integer.parseInt(text);
+
+                            ObjectPlacer.getCALC_FIELD().setText(ObjectPlacer.getCALC_FIELD().getText() + Calculator.POTENZEN.get(
+                                current));
+                            eval += current;
+                            return;
+                        } catch (@NotNull final NumberFormatException ignored) {
+                            break;
+                        }
+                    }
+                }
+
                 ObjectPlacer.getCALC_FIELD().setText(ObjectPlacer.getCALC_FIELD().getText() + text);
                 eval += text;
                 break;
         }
-    }
-
-    private void addBracketBeforeLastNumber(final boolean gerade) {
-        final String last = getLastNumber(eval);
-
-        eval = eval.substring(0, eval.length() - last.length())
-            + (gerade ? "-(" : "+(")
-            + eval.substring(eval.length() - last.length());
-    }
-
-    private String getLastNumber(@NotNull final String text) {
-        String subText = text;
-
-        final StringBuilder number = new StringBuilder();
-        final StringBuilder result = new StringBuilder();
-
-        if (subText.endsWith(")")) {
-            while (!subText.endsWith("(")) {
-                number.append(subText.charAt(subText.length() - 1));
-                subText = subText.substring(0, subText.length() - 1);
-            }
-            number.append("(");
-        } else {
-            while (!(
-                subText.endsWith("+")
-                    || subText.endsWith("-")
-                    || subText.endsWith("×")
-                    || subText.endsWith("÷")
-                    || subText.endsWith(" ")
-                    || subText.endsWith("²")
-                    || subText.endsWith("³")
-                    || subText.endsWith("(")
-            )) {
-                number.append(subText.charAt(subText.length() - 1));
-                subText = subText.substring(0, subText.length() - 1);
-            }
-
-            if (subText.endsWith("-")) {
-                number.append("-");
-            }
-        }
-
-        for (int i = number.toString().length() - 1; i >= 0; i--) {
-            result.append(number.charAt(i));
-        }
-
-        return result.toString();
     }
 
     private void askPotenz() {
@@ -238,17 +204,9 @@ public final class ActionHandler implements ActionListener {
         finish.setBackground(Color.LIGHT_GRAY);
         finish.setFocusable(false);
         finish.addActionListener(actionEvent -> {
-            final StringBuilder evalBuilder = new StringBuilder();
-            final String number = getLastNumber(eval);
             final int potenz = Integer.parseInt(field.getText());
 
-            addBracketBeforeLastNumber(potenz % 2 == 0);
-
-            for (int i = 1; i < potenz; i++) {
-                evalBuilder.append("*").append(number);
-            }
-
-            eval += evalBuilder + ")";
+            eval += "^" + potenz;
 
             final StringBuilder stringPotenz = new StringBuilder();
 
@@ -347,15 +305,19 @@ public final class ActionHandler implements ActionListener {
                         case "sqrt":
                             x = Math.sqrt(x);
                             break;
+
                         case "sin":
                             x = Math.sin(Math.toRadians(x));
                             break;
+
                         case "cos":
                             x = Math.cos(Math.toRadians(x));
                             break;
+
                         case "tan":
                             x = Math.tan(Math.toRadians(x));
                             break;
+
                         default:
                             throw new RuntimeException("Unknown function: " + func);
                     }
